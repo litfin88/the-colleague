@@ -595,11 +595,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogues:
-  - "Onu unutam\u0131yorum, her g\xFCn\xFCm\xFC ele ge\xE7irdi sanki."
-  - "Sakin ol, o sadece konu\u015Fuyor."
-  - "Umar\u0131m \xF6yledir."
+  - "Utku: Onu unutam\u0131yorum, her g\xFCn\xFCm\xFC ele ge\xE7irdi sanki."
+  - "Mehtap: Sakin ol, o sadece konu\u015Fuyor."
+  - "Utku: Umar\u0131m \xF6yledir."
   - "\u0130\xE7 Ses: (Sadece konu\u015Fmuyorsa ne olabilir ki?)"
-  - "Biliyordum, bir g\xFCn bunun olaca\u011F\u0131ndan emindim."
+  - "Utku: Biliyordum, bir g\xFCn bunun olaca\u011F\u0131ndan emindim."
   audioClips:
   - {fileID: 8300000, guid: f55eee6c3ac066e46b77f5d6392f6f39, type: 3}
   - {fileID: 8300000, guid: c4f1e6c3f51218e4abab82f66863d36a, type: 3}
@@ -5884,6 +5884,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Kadin_Karakter
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4255ab5e22ef8344fade00c3e921743d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Girlfriend
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -11,12 +11,17 @@ public class GameManager : MonoBehaviour
     public string[] dialogues;
     public AudioClip[] audioClips;
     private AudioSource audioSource;
+    
+    private Animator mainCharAnim;
+    private Animator womanCharAnim;
 
     private int dialogueStage;
     void Start()
     {
         currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
         audioSource = GetComponent<AudioSource>();
+        mainCharAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
+        womanCharAnim = GameObject.FindWithTag("Girlfriend").GetComponent<Animator>();
         
         switch (currentBuildIndex)
         {
@@ -52,7 +57,26 @@ public class GameManager : MonoBehaviour
         audioSource.clip = audioClips[dialogueStage];
         audioSource.Play();
         
+        if(dialogues[dialogueStage].Split(":")[0] == "Utku")
+        {
+            mainCharAnim.SetBool("isTalking", true);
+        }
+        if(dialogues[dialogueStage].Split(":")[0] == "Mehtap")
+        {
+            womanCharAnim.SetBool("isTalking", true);
+        }
+        
         yield return new WaitForSeconds(audioSource.clip.length + 0.3f);
+        
+        if(dialogues[dialogueStage].Split(":")[0] == "Utku")
+        {
+            mainCharAnim.SetBool("isTalking", false);
+        }
+        if(dialogues[dialogueStage].Split(":")[0] == "Mehtap")
+        {
+            womanCharAnim.SetBool("isTalking", false);
+        }
+        
         dialogueStage++;
         if (dialogueStage < maxStage)
         {
