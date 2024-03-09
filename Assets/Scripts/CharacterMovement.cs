@@ -38,7 +38,6 @@ public class CharacterMovement : MonoBehaviour
         if (isMoving == true && agent.remainingDistance < 0.5f)
         {
             StartCoroutine(changingSituation(currentSituation.Idle));
-            anim.speed -= 0.1f;
             isMoving = false;
         }
         
@@ -54,13 +53,17 @@ public class CharacterMovement : MonoBehaviour
                 canMove = false;
             }
         }
-        
         // check if player is moving
         
         if (Input.GetButtonDown("Fire1"))
         {
-            StartCoroutine(changingSituation(currentSituation.Walking));
+            MoveChar();
         }
+    }
+
+    public void MoveChar()
+    {
+        StartCoroutine(changingSituation(currentSituation.Walking));
     }
     
     public IEnumerator changingSituation(currentSituation newSituation)
