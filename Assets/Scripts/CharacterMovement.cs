@@ -18,11 +18,14 @@ public class CharacterMovement : MonoBehaviour
     private LayerMask groundLayer;
     private NavMeshAgent agent;
     public currentSituation situation;
-    private currentSituation lastSituation;
     private Animator anim;
+
+    private Vector3 mousePos;
     
     bool isMoving = false;
     bool canMove = false;
+
+    public GameObject itemToTake;
     
     // Start is called before the first frame update
     void Start()
@@ -42,7 +45,6 @@ public class CharacterMovement : MonoBehaviour
         }
         
         if(isMoving == false && canMove == true){
-            Vector3 mousePos = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, groundLayer))
@@ -57,6 +59,7 @@ public class CharacterMovement : MonoBehaviour
         
         if (Input.GetButtonDown("Fire1"))
         {
+            mousePos = Input.mousePosition;
             MoveChar();
         }
     }
@@ -75,7 +78,20 @@ public class CharacterMovement : MonoBehaviour
                 {
                     anim.SetBool("isWalking", false);
                 }
-                lastSituation = currentSituation.Idle;
+                if(itemToTake != null)
+                {
+                    anim.SetBool("isWalking", false);
+                    anim.Play("Item Taking");
+                    
+                    canMove = false;
+                    agent.enabled = false;
+                    yield return new WaitForSeconds(1.5f);
+                    agent.enabled = true;
+                    Destroy(itemToTake.gameObject);
+                    itemToTake = null;
+                    canMove = true;
+                }
+                
                 situation = currentSituation.Idle;
                 break;
             
@@ -96,7 +112,6 @@ public class CharacterMovement : MonoBehaviour
                     situation = currentSituation.Walking;
                 }
                 break;
-            
         }
     }
 }
