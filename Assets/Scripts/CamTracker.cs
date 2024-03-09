@@ -17,7 +17,11 @@ public class CamTracker : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        pivot.transform.position = Vector3.Lerp(pivot.transform.position, player.transform.position, 0.03f);
+        pivot.transform.position = Vector3.Lerp(
+            pivot.transform.position, 
+            player.transform.position + new Vector3(0, 1.5f, 0), 
+            0.03f);
+        
         this.gameObject.transform.LookAt(pivot.transform);
     }
 }
