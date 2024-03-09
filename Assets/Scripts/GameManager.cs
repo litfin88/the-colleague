@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,8 @@ public class GameManager : MonoBehaviour
     
     private Animator mainCharAnim;
     private Animator womanCharAnim;
+    
+    private TMP_Text subtitleText;
 
     private int dialogueStage;
     void Start()
@@ -22,6 +25,7 @@ public class GameManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         mainCharAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         womanCharAnim = GameObject.FindWithTag("Girlfriend").GetComponent<Animator>();
+        subtitleText = GameObject.Find("Subtitle").GetComponent<TMP_Text>();
         
         switch (currentBuildIndex)
         {
@@ -53,7 +57,8 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator ReadText(int maxStage)
     {
-        Debug.Log(dialogues[dialogueStage]);
+        subtitleText.enabled = true;
+        subtitleText.text = dialogues[dialogueStage];
         audioSource.clip = audioClips[dialogueStage];
         audioSource.Play();
         
@@ -81,6 +86,11 @@ public class GameManager : MonoBehaviour
         if (dialogueStage < maxStage)
         {
             StartCoroutine(ReadText(maxStage));
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
+            subtitleText.enabled = false;
         }
     }
     
