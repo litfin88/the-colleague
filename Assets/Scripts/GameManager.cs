@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -12,25 +13,41 @@ public class GameManager : MonoBehaviour
     public string[] dialogues;
     public AudioClip[] audioClips;
     private AudioSource audioSource;
+    private TMP_Text tipText;
     
     private Animator mainCharAnim;
     private Animator womanCharAnim;
+    private GameObject player;
+    private CharacterMovement charMove;
     
     private TMP_Text subtitleText;
 
     private int dialogueStage;
+    bool is3SOver = false;
+    bool firstTime = true;
+    private CharacterMovement _characterMovement;
+    private NavMeshAgent _navMeshAgent;
+
     void Start()
     {
+        charMove = GameObject.FindWithTag("Player").GetComponent<CharacterMovement>();
         currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
         audioSource = GetComponent<AudioSource>();
         mainCharAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         womanCharAnim = GameObject.FindWithTag("Girlfriend").GetComponent<Animator>();
         subtitleText = GameObject.Find("Subtitle").GetComponent<TMP_Text>();
+        player = GameObject.FindWithTag("Player");
+        _navMeshAgent = player.GetComponent<NavMeshAgent>();
+        _characterMovement = player.GetComponent<CharacterMovement>();
+        tipText = GameObject.Find("TipText").GetComponent<TMP_Text>();
         
         switch (currentBuildIndex)
         {
             case 0:
-                StartCoroutine(ReadText(4));
+                
+                StartCoroutine(ReadText(3));
+                _navMeshAgent.enabled = false;
+                _characterMovement.enabled = false;
                 if (isTimeOver)
                 {
                     
@@ -62,26 +79,33 @@ public class GameManager : MonoBehaviour
         audioSource.clip = audioClips[dialogueStage];
         audioSource.Play();
         
-        if(dialogues[dialogueStage].Split(":")[0] == "Utku")
+        if(charMove.situation == currentSituation.Sitting)
         {
-            mainCharAnim.SetBool("isTalking", true);
-        }
-        if(dialogues[dialogueStage].Split(":")[0] == "Mehtap")
-        {
-            womanCharAnim.SetBool("isTalking", true);
+            if(dialogues[dialogueStage].Split(":")[0] == "Utku")
+            {
+                mainCharAnim.SetBool("isTalking", true);
+            }
+            if(dialogues[dialogueStage].Split(":")[0] == "Mehtap")
+            {
+                womanCharAnim.SetBool("isTalking", true);
+            }
         }
         
         yield return new WaitForSeconds(audioSource.clip.length + 0.3f);
-        
-        if(dialogues[dialogueStage].Split(":")[0] == "Utku")
+
+        if (charMove.situation == currentSituation.Sitting)
         {
-            mainCharAnim.SetBool("isTalking", false);
+            if (dialogues[dialogueStage].Split(":")[0] == "Utku")
+            {
+                mainCharAnim.SetBool("isTalking", false);
+            }
+
+            if (dialogues[dialogueStage].Split(":")[0] == "Mehtap")
+            {
+                womanCharAnim.SetBool("isTalking", false);
+            }
         }
-        if(dialogues[dialogueStage].Split(":")[0] == "Mehtap")
-        {
-            womanCharAnim.SetBool("isTalking", false);
-        }
-        
+
         dialogueStage++;
         if (dialogueStage < maxStage)
         {
@@ -89,14 +113,36 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             subtitleText.enabled = false;
+
+            if (is3SOver == false)
+            {
+                switch (currentBuildIndex)
+                {
+                    case 0:
+                        StartCoroutine(After3S(6));
+                        break;
+            
+                    case 1:
+                        break;
+                }
+            }
+            else if(firstTime)
+            {
+                tipText.text = "Keşif yapmak için tıklayarak hareket edin.";
+                tipText.enabled = true;
+                _navMeshAgent.enabled = true;
+                _characterMovement.enabled = true;
+                firstTime = false;
+            }
         }
     }
     
-    public IEnumerator CountTime()
+    public IEnumerator After3S(int i)
     {
-        yield return new WaitForSeconds(60);
-        
+        yield return new WaitForSeconds(2);
+        is3SOver = true;
+        StartCoroutine(ReadText(i));
     }
 }

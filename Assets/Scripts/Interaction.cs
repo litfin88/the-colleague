@@ -24,14 +24,14 @@ public class Interaction : MonoBehaviour
     void Update()
     {
         Vector3 mousePos = Input.mousePosition;
-        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        Ray ray = Camera.allCameras[0].ScreenPointToRay(mousePos);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100, objectLayer))
         {
             Debug.Log(hit.transform.name);
             if (Input.GetButtonDown("Fire1"))
             {
-                if (hit.transform.name == "Knife")
+                if (hit.transform.gameObject.tag == "Cali")
                 {
                     objToTake = hit.transform.gameObject;
                     charMove.itemToTake = objToTake;

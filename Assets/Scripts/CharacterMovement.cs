@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,6 +27,7 @@ public class CharacterMovement : MonoBehaviour
     bool canMove = false;
 
     public GameObject itemToTake;
+    private TMP_Text tipText;
     
     // Start is called before the first frame update
     void Start()
@@ -33,6 +35,7 @@ public class CharacterMovement : MonoBehaviour
         groundLayer = LayerMask.GetMask("Walkable");
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        tipText = GameObject.Find("TipText").GetComponent<TMP_Text>();
     }
 
     // Update is called once per frame
@@ -45,7 +48,7 @@ public class CharacterMovement : MonoBehaviour
         }
         
         if(isMoving == false && canMove == true){
-            Ray ray = Camera.main.ScreenPointToRay(mousePos);
+            Ray ray = Camera.allCameras[0].ScreenPointToRay(mousePos);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, groundLayer))
             {
@@ -87,7 +90,31 @@ public class CharacterMovement : MonoBehaviour
                     agent.enabled = false;
                     yield return new WaitForSeconds(1.5f);
                     agent.enabled = true;
-                    Destroy(itemToTake.gameObject);
+                    
+                    if(itemToTake.tag == "Cali")
+                    {
+                        if(itemToTake.name == "BicakCali")
+                        {
+                            StartCoroutine(TipTextChange("Bıçak bulundu!"));
+                            PlayerPrefs.SetString("Inventory", PlayerPrefs.GetString("Inventory") + ",Bicak");
+                        }
+                        else if(itemToTake.name == "IpCali")
+                        {
+                            StartCoroutine(TipTextChange("İp bulundu!"));
+                            PlayerPrefs.SetString("Inventory", PlayerPrefs.GetString("Inventory") + ",Ip");
+                        }
+                        else
+                        {
+                            StartCoroutine(TipTextChange("Bir şey bulunamadı."));
+                        }
+
+                        itemToTake.layer = LayerMask.NameToLayer("Default");
+                    }
+                    else
+                    {
+                        Destroy(itemToTake.gameObject);
+                    }
+                    
                     itemToTake = null;
                     canMove = true;
                 }
@@ -100,6 +127,7 @@ public class CharacterMovement : MonoBehaviour
                 {
                     anim.SetTrigger("StandUp");
                     anim.SetBool("isWalking", true);
+                    tipText.enabled = false;
                     yield return new WaitForSeconds(2f);
                     canMove = true;
                     situation = currentSituation.Walking;
@@ -113,5 +141,13 @@ public class CharacterMovement : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public IEnumerator TipTextChange(string txt)
+    {
+        tipText.enabled = true;
+        tipText.text = txt;
+        yield return new WaitForSeconds(3);
+        tipText.enabled = false;
     }
 }
