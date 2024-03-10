@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public enum currentSituation
 {
@@ -22,20 +24,40 @@ public class CharacterMovement : MonoBehaviour
     private Animator anim;
 
     private Vector3 mousePos;
+    private int currentBuildIndex;
     
     bool isMoving = false;
     bool canMove = false;
 
     public GameObject itemToTake;
     private TMP_Text tipText;
-    
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+        currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        
+        if (currentBuildIndex == 0)
+        {
+            anim.SetBool("isFirstScene", true);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         groundLayer = LayerMask.GetMask("Walkable");
         agent = GetComponent<NavMeshAgent>();
-        anim = GetComponent<Animator>();
         tipText = GameObject.Find("TipText").GetComponent<TMP_Text>();
+
+        if (currentBuildIndex == 0)
+        {
+            StartCoroutine(changingSituation(currentSituation.Sitting));
+        }
+        else
+        {
+            StartCoroutine(changingSituation(currentSituation.Idle));
+        }
     }
 
     // Update is called once per frame

@@ -17,13 +17,24 @@ public class AreaTriggers : MonoBehaviour
 
     private bool bitti;
     bool gerceklesti = false;
+    private int currentBuildIndex;
+    
+    // [Header("Ikinci Bolum")]
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         mainCam = Camera.main;
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         player = GameObject.FindWithTag("Player");
-        bpGroup = blackPanel.GetComponent<CanvasGroup>();
+        currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        
+        if(currentBuildIndex == 0)
+        {
+            blackPanel.SetActive(false);
+            bpGroup = blackPanel.GetComponent<CanvasGroup>();
+        }
     }
 
     private void Update()
@@ -44,23 +55,36 @@ public class AreaTriggers : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Debug.Log(this.gameObject.name);
-            if (this.gameObject.name == "DigerAlanTrigger")
+            if (currentBuildIndex == 0)
             {
-                mainCam.gameObject.SetActive(false);
-                otherCam.gameObject.SetActive(true);
-                
-                if(gerceklesti == false)
+                Debug.Log(this.gameObject.name);
+                if (this.gameObject.name == "DigerAlanTrigger")
                 {
-                    gerceklesti = true;
-                    StartCoroutine(waitForSec());
+                    mainCam.gameObject.SetActive(false);
+                    otherCam.gameObject.SetActive(true);
+                    
+                    if(gerceklesti == false)
+                    {
+                        gerceklesti = true;
+                        StartCoroutine(waitForSec());
+                    }
+                }
+
+                if (this.gameObject.name == "IlkAlanTrigger")
+                {
+                    mainCam.gameObject.SetActive(true);
+                    otherCam.gameObject.SetActive(false);
                 }
             }
 
-            if (this.gameObject.name == "IlkAlanTrigger")
+            if (currentBuildIndex == 1)
             {
-                mainCam.gameObject.SetActive(true);
-                otherCam.gameObject.SetActive(false);
+                if (this.gameObject.name == "DartTrigger")
+                {
+                    CamTracker.isDartTriggered = true;
+                    StartCoroutine(_gameManager.ReadText(6));
+                    Camera.main.transform.rotation = Quaternion.Euler(0, 0, 0);
+                }
             }
         }
     }

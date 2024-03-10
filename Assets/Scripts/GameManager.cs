@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    int currentBuildIndex;
+    private int currentBuildIndex;
     bool isTimeOver = false;
 
     public string[] dialogues;
@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     
     private Animator mainCharAnim;
     private Animator womanCharAnim;
+    private Animator kazimAnim;
     private GameObject player;
     private CharacterMovement charMove;
     
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         mainCharAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         womanCharAnim = GameObject.FindWithTag("Girlfriend").GetComponent<Animator>();
+        kazimAnim = GameObject.FindWithTag("Kazim").GetComponent<Animator>();
         subtitleText = GameObject.Find("Subtitle").GetComponent<TMP_Text>();
         player = GameObject.FindWithTag("Player");
         _navMeshAgent = player.GetComponent<NavMeshAgent>();
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
                 break;
             
             case 1:
+                StartCoroutine(SecondScene());
                 break;
         }
     }
@@ -72,12 +75,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public IEnumerator SecondScene()
+    {
+        player.GetComponent<CharacterMovement>().enabled = false;
+        player.GetComponent<NavMeshAgent>().enabled = false;
+        
+        StartCoroutine(ReadText(5));
+        yield return new WaitForSeconds(1);
+        player.GetComponent<CharacterMovement>().enabled = true;
+        player.GetComponent<NavMeshAgent>().enabled = true;
+    }
+
     public IEnumerator ReadText(int maxStage)
     {
         subtitleText.enabled = true;
         subtitleText.text = dialogues[dialogueStage];
         audioSource.clip = audioClips[dialogueStage];
         audioSource.Play();
+        
+        if(dialogues[dialogueStage].Split(":")[0] == "Kazım")
+        {
+            kazimAnim.SetBool("isTalking", true);
+        }
         
         if(charMove.situation == currentSituation.Sitting)
         {
@@ -93,6 +112,11 @@ public class GameManager : MonoBehaviour
         
         yield return new WaitForSeconds(audioSource.clip.length + 0.3f);
 
+        if(dialogues[dialogueStage].Split(":")[0] == "Kazım")
+        {
+            kazimAnim.SetBool("isTalking", false);
+        }
+        
         if (charMove.situation == currentSituation.Sitting)
         {
             if (dialogues[dialogueStage].Split(":")[0] == "Utku")

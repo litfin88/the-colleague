@@ -36,6 +36,13 @@ public class Interaction : MonoBehaviour
                     objToTake = hit.transform.gameObject;
                     charMove.itemToTake = objToTake;
                 }
+
+                if (hit.transform.gameObject.tag == "Shot")
+                {
+                    PlayerPrefs.SetInt("Shot", 1);
+                    PlayerPrefs.Save();
+                    Destroy(hit.transform.gameObject);
+                }
             }
         }
     }
