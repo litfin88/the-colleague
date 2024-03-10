@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         mainCharAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         womanCharAnim = GameObject.FindWithTag("Girlfriend").GetComponent<Animator>();
-        kazimAnim = GameObject.FindWithTag("Kazim").GetComponent<Animator>();
         subtitleText = GameObject.Find("Subtitle").GetComponent<TMP_Text>();
         player = GameObject.FindWithTag("Player");
         _navMeshAgent = player.GetComponent<NavMeshAgent>();
@@ -81,7 +80,7 @@ public class GameManager : MonoBehaviour
         player.GetComponent<NavMeshAgent>().enabled = false;
         
         StartCoroutine(ReadText(5));
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(28);
         player.GetComponent<CharacterMovement>().enabled = true;
         player.GetComponent<NavMeshAgent>().enabled = true;
     }
@@ -95,6 +94,7 @@ public class GameManager : MonoBehaviour
         
         if(dialogues[dialogueStage].Split(":")[0] == "Kazım")
         {
+            kazimAnim = GameObject.FindWithTag("Kazim").GetComponent<Animator>();
             kazimAnim.SetBool("isTalking", true);
         }
         
@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour
 
         if(dialogues[dialogueStage].Split(":")[0] == "Kazım")
         {
+            kazimAnim = GameObject.FindWithTag("Kazim").GetComponent<Animator>();
             kazimAnim.SetBool("isTalking", false);
         }
         

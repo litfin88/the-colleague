@@ -10,6 +10,7 @@ TagManager:
   - Door
   - Kazim
   - Shot
+  - LastKey
   layers:
   - Default
   - TransparentFX

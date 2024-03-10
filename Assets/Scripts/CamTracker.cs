@@ -73,6 +73,7 @@ public class CamTracker : MonoBehaviour
                     player.transform.position + new Vector3(0, 1f, 0), 
                     0.03f);
                 this.gameObject.transform.position = pivot.transform.position + new Vector3(0, 9, 0);
+                Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
             }
         }
 

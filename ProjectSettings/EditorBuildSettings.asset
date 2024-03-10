@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ev.unity
     guid: 7320ff89f2ca592438ebb941231e1de3
+  - enabled: 1
+    path: Assets/Fatih2.unity
+    guid: 7e4a74e73e3e73244b44cc254b0ecfa7
   m_configObjects: {}
