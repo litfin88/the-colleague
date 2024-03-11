@@ -20764,8 +20764,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   otherCam: {fileID: 0}
-  blackPanel: {fileID: 0}
-  thanksPanel: {fileID: 0}
+  blackPanel: {fileID: 1414035032}
+  thanksPanel: {fileID: 1832522548}
   dialogues: []
   audioClips: []
 --- !u!1 &903398256
@@ -32332,7 +32332,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414035032}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

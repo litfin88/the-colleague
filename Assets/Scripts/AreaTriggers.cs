@@ -61,6 +61,8 @@ public class AreaTriggers : MonoBehaviour
         if (currentBuildIndex == 1)
         {
             customSource = gameObject.GetComponent<AudioSource>();
+            blackPanel.SetActive(false);
+            bpGroup = blackPanel.GetComponent<CanvasGroup>();
         }
     }
 
@@ -81,6 +83,7 @@ public class AreaTriggers : MonoBehaviour
         {
             blackPanel.SetActive(true);
             bpGroup.alpha += 0.002f;
+            subtitle.enabled = false;
             
             if(bpGroup.alpha >= 1)
             {
@@ -160,6 +163,8 @@ public class AreaTriggers : MonoBehaviour
         bgMusic.clip = audioClips[2];
         bgMusic.Play();
         
+        player.GetComponent<Animator>().SetBool("isWalking", false);
+        
         subtitle.enabled = true;
         subtitle.text = dialogues[0];
         customSource.clip = audioClips[0];
@@ -167,8 +172,8 @@ public class AreaTriggers : MonoBehaviour
         
         yield return new WaitForSeconds(audioClips[0].length + 0.3f);
         
-        subtitle.text = dialogues[0];
-        customSource.clip = audioClips[0];
+        subtitle.text = dialogues[1];
+        customSource.clip = audioClips[1];
         customSource.Play();
         
         yield return new WaitForSeconds(10);
